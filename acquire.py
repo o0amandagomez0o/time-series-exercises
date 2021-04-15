@@ -149,14 +149,13 @@ def get_opsd():
 
 
 
-def get_df(url, ):
+def get_df(url, cached=False):
     """
     
     """
     
     if cached == False:
         stores_list = []
-        url = "https://python.zach.lol/api/v1/stores"
         response = requests.get(url)
         data = response.json()
         n = data['payload']['max_page']
@@ -173,3 +172,56 @@ def get_df(url, ):
     else:
         stores = pd.read_csv('stores.csv', index_col=0)
     return stores
+
+
+
+
+
+
+def merge_zach():
+    """
+    creates df1 dataframe from: 
+    - merged `items` df with `sales` df on `item` key
+    merges df1 with `stores` df on `store` key
+    - drops repeated columns
+    
+    returns: df
+    """
+    
+    # create the three dfs
+    items = get_items()
+    stores = get_stores()
+    sales = pd.read_csv('sales.csv')
+    
+    # merges the three dfs
+    df1 = items.merge(sales, left_on="item_id", right_on="item", how= 'outer')
+    
+    df = df1.merge(stores, left_on="store", right_on="store_id", how= 'outer')
+    
+    df = df.drop(columns=["item", "store"])
+    
+    return df
+
+
+
+#def get_stores(cached=False):
+#    '''
+#    This function uses REST API to collect stores data, then stores the data as a .csv file and returns a df
+#    '''
+#    if cached == False:
+#        stores_list = []
+#        url = "https://python.zach.lol/api/v1/stores"
+#        response = requests.get(url)
+#        data = response.json()
+#        n = data['payload']['max_page']
+#        for i in range(1, n+1):
+#            new_url = url + '?page=' + str(i)
+#            response = requests.get(new_url)
+#            data = response.json()
+#            page_stores = data['payload']['stores']
+#            stores_list += page_stores
+#        stores = pd.DataFrame(stores_list)
+#        stores.to_csv('stores.csv')
+#    else:
+#        stores = pd.read_csv('stores.csv', index_col=0)
+#    return stores
