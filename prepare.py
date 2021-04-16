@@ -25,3 +25,31 @@ def prep_zstore(df):
     df['sales_total'] = df.sale_amount * df.item_price
     
     return df
+
+
+
+
+
+
+def prep_opsd(opsd):
+    """
+    prep_opsd 
+    - sets index to datetime typed `Date`
+    - adds month & year columns
+    - fills na's with 0 
+    """
+    
+    #change dtype to datetime
+    opsd.Date = pd.to_datetime(opsd.Date)
+    
+    #set date to index
+    opsd = opsd.set_index('Date').sort_index()
+    
+    #add month/year columns
+    opsd['month'] = opsd.index.month
+    opsd['year'] = opsd.index.year
+    
+    #fill nan's
+    opsd = opsd.fillna(0)
+    
+    return opsd
