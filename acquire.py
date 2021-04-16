@@ -193,6 +193,8 @@ def merge_zach():
     stores = get_stores()
     sales = pd.read_csv('sales.csv')
     
+    sales = sales.drop(columns=sales.columns[0])
+    
     # merges the three dfs
     df1 = items.merge(sales, left_on="item_id", right_on="item", how= 'outer')
     
