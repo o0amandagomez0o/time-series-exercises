@@ -52,4 +52,6 @@ def prep_opsd(opsd):
     #fill nan's
     opsd = opsd.fillna(0)
     
+    opsd.columns = ['consumption', 'wind', 'solar', 'wind_and_solar', 'month', 'year']
+    
     return opsd
